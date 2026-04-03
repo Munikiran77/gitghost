@@ -4,22 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitGhost - The Digital Archaeologist for Your Codebase</title>
+    <title>GitGhost - Forensic AI for Deleted Logic</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;600;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0d0d0d;
-            --accent-color: #e84c1e;
+            --bg-color: #080B14;
+            --accent-orange: #FF4500;
+            --accent-cyan: #00D4FF;
             --text-main: #ffffff;
             --text-secondary: #aaaaaa;
-            --card-bg: #1a1a1a;
-            --danger-bg: rgba(232, 76, 30, 0.1);
-            --danger-border: rgba(232, 76, 30, 0.3);
+            --card-bg: rgba(16, 21, 34, 0.7);
+            --danger-bg: rgba(255, 45, 45, 0.1);
+            --danger-border: #FF2D2D;
             --border-radius: 12px;
+            --panel-bg: rgba(10, 15, 26, 0.9);
         }
 
         * {
@@ -29,33 +31,69 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background-image:
-                radial-gradient(circle at 15% 50%, rgba(232, 76, 30, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(232, 76, 30, 0.04) 0%, transparent 50%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
         }
 
         header {
             text-align: center;
             padding: 5rem 2rem 3rem;
-            animation: fadeInDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .status-dot {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            margin-bottom: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: #00ff88;
+            border-radius: 50%;
+            animation: pulse-green 2s infinite;
         }
 
         h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 0.75rem;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 1rem;
             letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(255, 69, 0, 0.6);
+        }
+
+        .ghost-emoji {
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
         }
 
         .subtitle {
@@ -63,6 +101,16 @@
             font-size: 1.25rem;
             font-weight: 300;
             letter-spacing: 0.5px;
+            min-height: 2rem;
+        }
+
+        .typing-text {
+            border-right: 2px solid var(--accent-orange);
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            padding-right: 4px;
+            animation: blink-caret 0.75s step-end infinite;
         }
 
         main {
@@ -76,37 +124,50 @@
         .search-container {
             display: flex;
             gap: 1rem;
-            margin-bottom: 3rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
             position: relative;
             z-index: 10;
         }
 
-        input[type="url"] {
-            flex: 1;
-            min-width: 250px;
+        input[type="url"],
+        .filter-bar input,
+        .filter-bar select {
             padding: 1.2rem 1.5rem;
             font-size: 1.1rem;
-            background-color: rgba(26, 26, 26, 0.8);
-            border: 1px solid #333;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 69, 0, 0.3);
             border-radius: var(--border-radius);
             color: var(--text-main);
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
             font-family: inherit;
-        }
-
-        input[type="url"]:focus {
             outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(232, 76, 30, 0.2);
         }
 
-        button {
+        input[type="url"] {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        input[type="url"]:focus,
+        .filter-bar input:focus,
+        .filter-bar select:focus {
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.4);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .filter-bar select option {
+            background-color: var(--bg-color);
+            color: white;
+        }
+
+        button.primary-btn {
             padding: 0 2.5rem;
             font-size: 1.1rem;
-            font-weight: 600;
-            background-color: var(--accent-color);
+            font-weight: 700;
+            background-color: var(--accent-orange);
             color: white;
             border: none;
             border-radius: var(--border-radius);
@@ -117,63 +178,400 @@
             justify-content: center;
             gap: 0.75rem;
             min-height: 60px;
-            box-shadow: 0 4px 15px rgba(232, 76, 30, 0.3);
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
+            animation: pulse-orange 2s infinite;
         }
 
-        button:hover {
-            background-color: #ff5a2b;
+        button.primary-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(232, 76, 30, 0.4);
+            box-shadow: 0 0 25px rgba(255, 69, 0, 0.8);
+            background-color: #ff5a2b;
         }
 
-        button:active {
+        button.primary-btn:active {
             transform: translateY(1px);
         }
 
-        button:disabled {
+        button.primary-btn:disabled {
             opacity: 0.7;
+            cursor: not-allowed;
+            animation: none;
+            box-shadow: none;
+        }
+
+        .quick-picks {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: var(--accent-cyan);
+            border-radius: 20px;
+            padding: 0.4rem 1rem;
+            font-size: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        #stats {
+            text-align: center;
+            font-size: 1.8rem;
+            color: var(--accent-cyan);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            min-height: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #stats.reveal {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .stats-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .analyze-all-btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: transparent;
+            color: var(--accent-orange);
+            border: 2px solid var(--accent-orange);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: inherit;
+        }
+
+        .analyze-all-btn:hover {
+            background-color: rgba(255, 69, 0, 0.1);
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .analyze-all-btn:disabled {
+            opacity: 0.6;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
-        #stats {
-            text-align: center;
-            font-size: 1.4rem;
-            color: var(--accent-color);
-            font-weight: 800;
-            margin-bottom: 2rem;
-            min-height: 2rem;
-            transition: opacity 0.3s ease;
+        .cancel-btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: rgba(255, 45, 45, 0.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 45, 45, 0.5);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
         }
 
+        .cancel-btn:hover {
+            background-color: rgba(255, 45, 45, 0.2);
+            box-shadow: 0 0 10px rgba(255, 45, 45, 0.3);
+        }
+
+        .progress-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInDown 0.5s ease-out;
+        }
+
+        .progress-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-cyan), #00ff88);
+            background-size: 200% 200%;
+            border-radius: 6px;
+            transition: width 0.4s ease;
+            animation: gradient-shift 2s linear infinite;
+        }
+
+        @keyframes gradient-shift {
+            0% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .loader-small {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 69, 0, 0.3);
+            border-top-color: var(--accent-orange);
+            border-radius: 50%;
+            animation: spin 0.8s ease-in-out infinite;
+            display: none;
+        }
+
+        /* Danger Dashboard */
+        .danger-dashboard {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            display: none;
+            opacity: 0;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: opacity 0.5s ease;
+        }
+
+        .danger-dashboard.show {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .danger-dashboard-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .danger-progress-ring {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 1rem;
+        }
+
+        .danger-progress-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .danger-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 10;
+        }
+
+        .danger-circle-meter {
+            fill: none;
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .danger-score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .danger-subtitle {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            display: none;
+            gap: 1rem;
+            opacity: 0;
+            flex-wrap: wrap;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: opacity 0.5s ease;
+        }
+
+        .filter-bar.show {
+            display: flex;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .filter-bar input {
+            flex: 2;
+            min-width: 200px;
+            padding: 0.8rem 1.2rem;
+        }
+
+        .filter-bar select {
+            flex: 1;
+            min-width: 150px;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .filter-bar select:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+        }
+
+        /* Results flex */
+        #results {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Interactive Card Hide/Show Engine */
         .ghost-card {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
             padding: 2rem;
             margin-bottom: 2rem;
-            border: 1px solid #2a2a2a;
+            border: 1px solid rgba(255, 45, 45, 0.2);
+            border-left: 4px solid var(--danger-border);
             animation: fadeInUp 0.6s ease-out backwards;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), -5px 0 15px rgba(255, 45, 45, 0.2);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.4s ease, margin 0.4s ease, max-height 0.4s ease, padding 0.4s ease;
+            overflow: hidden;
+            transform-origin: top center;
+        }
+
+        .ghost-card.filtered-out {
+            opacity: 0;
+            margin-bottom: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-width: 0;
+            max-height: 0;
+            /* Hides it gracefully */
+            transform: scale(0.95);
+            pointer-events: none;
         }
 
         .ghost-card:hover {
-            border-color: #3a3a3a;
-            transform: translateY(-2px);
+            border-color: rgba(255, 45, 45, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), -5px 0 20px rgba(255, 45, 45, 0.4);
+        }
+
+        /* Highlight animation for timeline click */
+        .card-highlight {
+            animation: highlightPulse 2s ease-out;
+        }
+
+        @keyframes highlightPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.8), -5px 0 15px rgba(255, 45, 45, 0.2);
+                border-color: var(--accent-cyan);
+                transform: scale(1.02);
+            }
+
+            100% {
+                box-shadow: 0 0 0 30px rgba(0, 212, 255, 0), -5px 0 15px rgba(255, 45, 45, 0.2);
+                border-color: rgba(255, 45, 45, 0.2);
+                transform: scale(1);
+            }
         }
 
         .commit-header {
             margin-bottom: 1.5rem;
             padding-bottom: 1.5rem;
-            border-bottom: 1px solid #2a2a2a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .commit-title {
             font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
             line-height: 1.4;
+        }
+
+        .risk-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+
+        .risk-critical {
+            background: rgba(255, 45, 45, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 45, 45, 0.4);
+        }
+
+        .risk-warning {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+            border: 1px solid rgba(255, 170, 0, 0.4);
+        }
+
+        .risk-info {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 212, 255, 0.4);
         }
 
         .commit-meta {
@@ -184,88 +582,142 @@
             align-items: center;
         }
 
-        .commit-meta span:first-child {
-            font-family: 'Fira Code', monospace;
-            background: #2a2a2a;
+        .commit-sha {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 212, 255, 0.2);
             padding: 0.2rem 0.6rem;
             border-radius: 4px;
-            color: #ccc;
+        }
+
+        .commit-date {
+            font-style: italic;
+            opacity: 0.8;
         }
 
         .deleted-code {
-            background-color: rgba(0, 0, 0, 0.5);
-            border-left: 3px solid var(--accent-color);
+            background-color: rgba(0, 0, 0, 0.7);
             padding: 1.5rem;
-            border-radius: 0 8px 8px 0;
+            border-radius: 6px;
             margin-bottom: 2rem;
             overflow-x: auto;
-            font-family: 'Fira Code', Consolas, monospace;
-            font-size: 0.95rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
             line-height: 1.6;
             color: #ff8e8e;
             white-space: pre-wrap;
             word-wrap: break-word;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .deleted-code::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .deleted-code::-webkit-scrollbar-thumb {
-            background: #444;
-            border-radius: 4px;
+            border: 1px solid rgba(255, 45, 45, 0.2);
+            box-shadow: inset 0 0 20px rgba(255, 45, 45, 0.05);
         }
 
         .analyze-btn {
             background-color: transparent;
-            border: 1px solid var(--danger-border);
-            color: white;
+            border: 1px solid var(--accent-orange);
+            color: var(--accent-orange);
             width: 100%;
-            box-shadow: none;
-            min-height: 50px;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .analyze-btn:hover {
-            background-color: var(--danger-bg);
-            border-color: var(--accent-color);
-            box-shadow: none;
+            background-color: rgba(255, 69, 0, 0.1);
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.3);
+            text-shadow: 0 0 8px rgba(255, 69, 0, 0.5);
+        }
+
+        .analyze-btn.active {
+            background-color: var(--accent-orange);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
         }
 
         .analysis-panel {
             margin-top: 1.5rem;
             padding: 2rem;
-            border: 1px solid var(--danger-border);
-            border-left: 4px solid var(--accent-color);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-left: 4px solid var(--accent-cyan);
             border-radius: 0 8px 8px 0;
-            background-color: #151515;
+            background-color: var(--panel-bg);
             display: none;
-            animation: slideDown 0.4s ease-out;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: fluidFadeIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(0, 212, 255, 0.05);
+            position: relative;
+        }
+
+        .report-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .report-title {
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--accent-cyan);
         }
 
         .analysis-panel h3 {
-            color: var(--accent-color);
-            margin-top: 1.5rem;
+            color: var(--accent-orange);
+            margin-top: 1.8rem;
             margin-bottom: 0.75rem;
-            font-size: 1.15rem;
-            font-weight: 600;
+            font-size: 1.1rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1.5px;
         }
 
-        .analysis-panel h3:first-child {
+        .analysis-panel h3:first-of-type {
             margin-top: 0;
         }
 
         .analysis-panel p {
-            margin-bottom: 1rem;
             color: #d1d1d1;
             line-height: 1.7;
+            margin-bottom: 1rem;
         }
 
-        .analysis-panel p:last-child {
-            margin-bottom: 0;
+        .analysis-panel strong {
+            color: white;
+            font-weight: 600;
+        }
+
+        .analysis-panel code {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            color: var(--accent-cyan);
         }
 
         .loader {
@@ -279,33 +731,164 @@
         }
 
         .loader.accent {
-            border-color: rgba(232, 76, 30, 0.2);
-            border-top-color: var(--accent-color);
+            border-color: rgba(255, 69, 0, 0.2);
+            border-top-color: var(--accent-orange);
             margin: 1.5rem auto 0;
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
         }
 
         .error-message {
-            background-color: rgba(255, 0, 0, 0.1);
+            background-color: rgba(255, 45, 45, 0.1);
             color: #ff6b6b;
             padding: 1.25rem;
             border-radius: var(--border-radius);
-            border: 1px solid #ff6b6b;
+            border: 1px solid rgba(255, 45, 45, 0.4);
             margin-bottom: 2rem;
             text-align: center;
             display: none;
             animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Timeline Styles */
+        .timeline-container {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(16, 21, 34, 0.5);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 69, 0, 0.2);
+            backdrop-filter: blur(5px);
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .timeline-container.show {
+            display: block;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .timeline-title {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .timeline-svg {
+            width: 100%;
+            height: 100px;
+            overflow: visible;
+        }
+
+        .timeline-line {
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 2;
+        }
+
+        .timeline-dot {
+            fill: var(--accent-orange);
+            stroke: var(--bg-color);
+            stroke-width: 3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .timeline-dot:hover {
+            fill: var(--accent-cyan);
+            stroke-width: 0;
+            transform: scale(1.5);
+            filter: drop-shadow(0 0 10px var(--accent-cyan));
+        }
+
+        .timeline-text {
+            fill: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            text-anchor: middle;
+            pointer-events: none;
+            transition: fill 0.3s ease, transform 0.3s ease;
+        }
+
+        .timeline-dot-group:hover .timeline-text {
+            fill: white;
+            transform: translateY(-2px);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
         }
 
         footer {
             text-align: center;
             padding: 3rem;
-            color: #555;
+            color: #777;
             font-size: 0.95rem;
             margin-top: auto;
-            border-top: 1px solid #1a1a1a;
-            letter-spacing: 0.5px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-ghost {
+            margin-top: 1rem;
+            color: #555;
+            font-style: italic;
+        }
+
+        /* Animations */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse-green {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(0, 255, 136, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+            }
+        }
+
+        @keyframes pulse-orange {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 69, 0, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 69, 0, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 69, 0, 0);
+            }
+        }
+
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: var(--accent-orange)
+            }
         }
 
         @keyframes spin {
@@ -329,24 +912,24 @@
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px) scale(0.98);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
-        @keyframes slideDown {
+        @keyframes fluidFadeIn {
             from {
                 opacity: 0;
-                transform: translateY(-15px);
+                transform: translateY(-15px) scale(0.98);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
@@ -388,7 +971,7 @@
                 min-width: 100%;
             }
 
-            button {
+            button.primary-btn {
                 width: 100%;
             }
 
@@ -399,39 +982,246 @@
             main {
                 padding: 0 1rem 3rem;
             }
+
+            .timeline-container {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 
 <body>
 
+    <canvas id="bg-canvas"></canvas>
+
     <header>
-        <h1><span>👻</span> GitGhost</h1>
-        <p class="subtitle">The Digital Archaeologist for Your Codebase</p>
+        <div class="status-dot">
+            <span class="dot"></span> AI Engine Online
+        </div>
+        <h1><span class="ghost-emoji">👻</span> GitGhost</h1>
+        <p class="subtitle"><span id="typewriter" class="typing-text"></span></p>
     </header>
 
     <main>
         <div class="search-container">
-            <input type="url" id="repoUrl" placeholder="https://github.com/facebook/react" autocomplete="off"
+            <input type="url" id="repoUrl" placeholder="Paste any public GitHub repo URL..." autocomplete="off"
                 spellcheck="false" />
-            <button id="huntBtn" onclick="huntGhosts()">
+            <button id="huntBtn" class="primary-btn" onclick="huntGhosts()">
                 <span id="btnText">Hunt Ghosts 👻</span>
                 <div class="loader" id="mainLoader"></div>
             </button>
         </div>
 
+        <div class="quick-picks">
+            <button class="quick-btn" onclick="fillRepo('https://github.com/facebook/react')">Try React</button>
+            <button class="quick-btn" onclick="fillRepo('https://github.com/microsoft/vscode')">Try VS Code</button>
+            <button class="quick-btn" onclick="fillRepo('https://github.com/torvalds/linux')">Try Linux</button>
+        </div>
+
         <div id="errorMessage" class="error-message"></div>
-        <div id="stats"></div>
+
+        <div id="stats-container" class="stats-container">
+            <div id="stats"></div>
+            <button id="analyzeAllBtn" class="analyze-all-btn" onclick="analyzeAllGhosts()">
+                <span id="analyzeAllText">Analyze All Ghosts 👻</span>
+                <div class="loader-small" id="analyzeAllLoader"></div>
+            </button>
+            <button id="cancelAnalyzeBtn" class="cancel-btn" onclick="cancelAnalysis()"
+                style="display: none;">Stop</button>
+        </div>
+
+        <div id="progress-container" class="progress-container">
+            <div id="progress-text" class="progress-text">Analyzing Ghost 1 of X...</div>
+            <div class="progress-track">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div id="danger-dashboard" class="danger-dashboard"></div>
+
+        <!-- NEW FILTER BAR -->
+        <div id="filter-bar" class="filter-bar">
+            <input type="text" id="searchFilter" placeholder="Search deleted logic..." oninput="applyFilters()"
+                autocomplete="off">
+            <select id="riskFilter" onchange="applyFilters()">
+                <option value="ALL">All Risks</option>
+                <option value="CRITICAL">🔴 Critical</option>
+                <option value="WARNING">🟡 Warning</option>
+                <option value="INFO">🟢 Info</option>
+            </select>
+            <select id="sortFilter" onchange="applyFilters()">
+                <option value="NEWEST">Newest First</option>
+                <option value="OLDEST">Oldest First</option>
+            </select>
+        </div>
 
         <div id="results"></div>
+
+        <div id="timeline-container" class="timeline-container">
+            <div class="timeline-title">Visual Ghost History</div>
+            <div id="timeline-svg-wrapper"></div>
+        </div>
     </main>
 
     <footer>
-        GitGhost — Forensic AI for Deleted Logic
+        <div>Powered by Gemini AI + GitHub API</div>
+        <div class="footer-ghost">No code deletion goes unnoticed 👻</div>
     </footer>
 
     <script>
-        const GEMINI_API_KEY = 'AIzaSyCUU4UMM0epQLtKTkW-hUM9aBeCq2-aSw8';
+        const GEMINI_API_KEY = 'AIzaSyCUU4UMM0epQLtKTkW-hUM9aBeCq2-aSw8'; // using existing key
+
+        // -----------------------------------------
+        // Canvas Particles Background
+        // -----------------------------------------
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null };
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * innerWidth;
+                this.y = Math.random() * innerHeight;
+                this.size = Math.random() * 2;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 20) + 1;
+                this.color = Math.random() > 0.8 ? 'rgba(0, 212, 255, 0.4)' : 'rgba(255, 255, 255, 0.2)';
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+            update() {
+                // Gentle floating
+                this.baseY -= 0.2;
+                if (this.baseY < 0) this.baseY = innerHeight;
+
+                // Mouse interaction
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    let forceDirectionX = dx / distance;
+                    let forceDirectionY = dy / distance;
+                    let maxDistance = 150;
+                    let force = (maxDistance - distance) / maxDistance;
+                    let directionX = forceDirectionX * force * this.density;
+                    let directionY = forceDirectionY * force * this.density;
+
+                    if (distance < maxDistance) {
+                        this.x -= directionX;
+                        this.y -= directionY;
+                    } else {
+                        if (this.x !== this.baseX) {
+                            let dx = this.x - this.baseX;
+                            this.x -= dx / 20;
+                        }
+                        if (this.y !== this.baseY) {
+                            let dy = this.y - this.baseY;
+                            this.y -= dy / 20;
+                        }
+                    }
+                } else {
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 20;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 20;
+                    }
+                }
+                this.draw();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            resizeCanvas();
+            let numberOfParticles = (canvas.width * canvas.height) / 8000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+
+        // -----------------------------------------
+        // Typewriter Effect
+        // -----------------------------------------
+        const phrases = [
+            "The Digital Archaeologist for Your Codebase",
+            "Forensic AI for Deleted Logic",
+            "Uncover What Git Forgot"
+        ];
+        let currentPhraseIdx = 0;
+        let currentCharIdx = 0;
+        let isDeleting = false;
+        const typeEl = document.getElementById('typewriter');
+
+        function typeLoop() {
+            const currentPhrase = phrases[currentPhraseIdx];
+
+            if (isDeleting) {
+                typeEl.textContent = currentPhrase.substring(0, currentCharIdx - 1);
+                currentCharIdx--;
+            } else {
+                typeEl.textContent = currentPhrase.substring(0, currentCharIdx + 1);
+                currentCharIdx++;
+            }
+
+            let typeSpeed = isDeleting ? 30 : 70;
+
+            if (!isDeleting && currentCharIdx === currentPhrase.length) {
+                typeSpeed = 2000; // pause at end
+                isDeleting = true;
+            } else if (isDeleting && currentCharIdx === 0) {
+                isDeleting = false;
+                currentPhraseIdx = (currentPhraseIdx + 1) % phrases.length;
+                typeSpeed = 500; // pause before typing next
+            }
+
+            setTimeout(typeLoop, typeSpeed);
+        }
+
+        setTimeout(typeLoop, 500);
+
+        // -----------------------------------------
+        // Logic Functions
+        // -----------------------------------------
+        function fillRepo(url) {
+            document.getElementById('repoUrl').value = url;
+            document.getElementById('repoUrl').focus();
+        }
 
         function showError(msg) {
             const errDiv = document.getElementById('errorMessage');
@@ -457,6 +1247,335 @@
             return null;
         }
 
+        function timeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " minutes ago";
+            return Math.floor(seconds) + " seconds ago";
+        }
+
+        function getRiskBadge(msg) {
+            const low = msg.toLowerCase();
+            if (low.includes('security') || low.includes('auth') || low.includes('fix') || low.includes('patch') || low.includes('cve')) {
+                return '<span class="risk-badge risk-critical">🔴 CRITICAL</span>';
+            } else if (low.includes('refactor') || low.includes('remove') || low.includes('delete') || low.includes('drop')) {
+                return '<span class="risk-badge risk-warning">🟡 WARNING</span>';
+            } else {
+                return '<span class="risk-badge risk-info">🟢 INFO</span>';
+            }
+        }
+
+        function getRawRiskCategory(badgeHtml) {
+            if (badgeHtml.includes('CRITICAL')) return 'CRITICAL';
+            if (badgeHtml.includes('WARNING')) return 'WARNING';
+            return 'INFO';
+        }
+
+        let isGlobalCancelRequested = false;
+
+        async function analyzeAllGhosts() {
+            const container = document.getElementById('results');
+            const btns = Array.from(container.querySelectorAll('.analyze-btn'));
+            const unanalyzed = btns.filter(btn => !btn.classList.contains('active'));
+
+            if (unanalyzed.length === 0) return;
+
+            isGlobalCancelRequested = false;
+
+            const mainBtn = document.getElementById('analyzeAllBtn');
+            const cancelBtn = document.getElementById('cancelAnalyzeBtn');
+            const mainText = document.getElementById('analyzeAllText');
+            const mainLoader = document.getElementById('analyzeAllLoader');
+            const progContainer = document.getElementById('progress-container');
+            const progText = document.getElementById('progress-text');
+            const progFill = document.getElementById('progress-fill');
+
+            mainBtn.disabled = true;
+            mainLoader.style.display = 'block';
+            cancelBtn.style.display = 'block';
+            progContainer.style.display = 'flex';
+            progFill.style.width = '0%';
+
+            for (let i = 0; i < unanalyzed.length; i++) {
+                if (isGlobalCancelRequested) {
+                    progText.textContent = "Analysis Cancelled.";
+                    break;
+                }
+
+                const btn = unanalyzed[i];
+                if (btn.classList.contains('active')) continue;
+
+                progText.textContent = `Analyzing Ghost ${i + 1} of ${unanalyzed.length}...`;
+
+                btn.click();
+
+                let waitMs = 3000;
+                while (waitMs > 0 && !isGlobalCancelRequested) {
+                    await new Promise(r => setTimeout(r, 100));
+                    waitMs -= 100;
+                }
+
+                progFill.style.width = `${((i + 1) / unanalyzed.length) * 100}%`;
+            }
+
+            if (!isGlobalCancelRequested) {
+                progText.textContent = "Analysis Complete!";
+                mainText.textContent = "✓ All Analyzed";
+            } else {
+                mainText.textContent = "Analyze All Ghosts 👻";
+            }
+
+            mainBtn.disabled = false;
+            mainLoader.style.display = 'none';
+            cancelBtn.style.display = 'none';
+
+            setTimeout(() => {
+                progContainer.style.display = 'none';
+                const cancelBtnReset = document.getElementById('cancelAnalyzeBtn');
+                cancelBtnReset.textContent = "Stop";
+                cancelBtnReset.disabled = false;
+            }, 2000);
+        }
+
+        function cancelAnalysis() {
+            isGlobalCancelRequested = true;
+            const cancelBtn = document.getElementById('cancelAnalyzeBtn');
+            cancelBtn.textContent = "Stopping...";
+            cancelBtn.disabled = true;
+        }
+
+        // Apply Filters logic
+        function applyFilters() {
+            const searchText = document.getElementById('searchFilter').value.toLowerCase();
+            const riskValue = document.getElementById('riskFilter').value;
+            const sortMode = document.getElementById('sortFilter').value;
+
+            const cards = Array.from(document.querySelectorAll('.ghost-card'));
+
+            // Text search and specific risk value match
+            cards.forEach(card => {
+                const content = card.getAttribute('data-content') || '';
+                const risk = card.getAttribute('data-risk');
+
+                let matchesSearch = !searchText || content.includes(searchText);
+                let matchesRisk = riskValue === 'ALL' || risk === riskValue;
+
+                if (matchesSearch && matchesRisk) {
+                    // It's possible to use JS style but removing the class engages CSS transitions
+                    card.classList.remove('filtered-out');
+                    // Needs to keep max-height unbounded when showing, but bounding when animating.
+                    card.style.maxHeight = '5000px';
+                } else {
+                    card.classList.add('filtered-out');
+                    card.style.maxHeight = '0px';
+                }
+            });
+
+            // Sorting purely via Flex order mapping
+            let sortedCards = cards.map(c => ({
+                el: c,
+                ts: parseInt(c.getAttribute('data-timestamp') || 0)
+            }));
+
+            // Newest (higher ms) should appear first (lower flex order)
+            if (sortMode === 'NEWEST') {
+                sortedCards.sort((a, b) => b.ts - a.ts);
+            } else {
+                // Oldest (lower ms) first
+                sortedCards.sort((a, b) => a.ts - b.ts);
+            }
+
+            sortedCards.forEach((obj, idx) => {
+                obj.el.style.order = idx;
+            });
+
+            // Adjust animation delays to prevent jitter on filter switch
+            let shownIndex = 0;
+            sortedCards.forEach((obj) => {
+                if (!obj.el.classList.contains('filtered-out')) {
+                    obj.el.style.animationDelay = `${shownIndex * 0.05}s`;
+                    shownIndex++;
+                } else {
+                    obj.el.style.animationDelay = '0s';
+                }
+            });
+        }
+
+        // Danger Dashboard Builder
+        function renderDangerDashboard(ghostsCount, ghostsData) {
+            const dashboard = document.getElementById('danger-dashboard');
+
+            if (ghostsCount === 0) {
+                dashboard.classList.remove('show');
+                return;
+            }
+
+            let baseScore = Math.min(ghostsCount * 5, 50);
+            const keywords = ['auth', 'security', 'password', 'token', 'secret', 'credential', 'key', 'crypto'];
+            let keywordHits = 0;
+
+            ghostsData.forEach(ghost => {
+                const textTarget = (ghost.fullCode + ' ' + ghost.message).toLowerCase();
+                keywords.forEach(word => {
+                    const regex = new RegExp(`\\b${word}\\b`, 'g');
+                    const matches = textTarget.match(regex);
+                    if (matches) {
+                        keywordHits += matches.length;
+                    }
+                });
+            });
+
+            let keywordScore = Math.min(keywordHits * 10, 50);
+            let totalScore = Math.floor(Math.min(baseScore + keywordScore, 100)); // ensure integer
+
+            let strokeColor = '#00ff88'; // green
+            let message = 'LOW deletion risk';
+            let messageColor = '#00ff88';
+
+            if (totalScore > 70) {
+                strokeColor = '#ff6b6b';
+                message = 'HIGH deletion risk';
+                messageColor = '#ff6b6b';
+            } else if (totalScore >= 40) {
+                strokeColor = '#ffaa00';
+                message = 'MODERATE deletion risk';
+                messageColor = '#ffaa00';
+            }
+
+            const radius = 65;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (totalScore / 100) * circumference;
+
+            dashboard.innerHTML = `
+                <div class="danger-dashboard-title">DANGER SCORE</div>
+                <div class="danger-progress-ring">
+                    <svg class="danger-progress-svg" viewBox="0 0 150 150">
+                        <circle class="danger-circle-bg" cx="75" cy="75" r="${radius}"></circle>
+                        <circle class="danger-circle-meter" cx="75" cy="75" r="${radius}" 
+                            stroke="${strokeColor}" 
+                            stroke-dasharray="${circumference}" 
+                            stroke-dashoffset="${circumference}"
+                            style="filter: drop-shadow(0 0 8px ${strokeColor});"></circle>
+                    </svg>
+                    <div class="danger-score-text" style="color: ${messageColor}">${totalScore}</div>
+                </div>
+                <div class="danger-subtitle" style="color: ${messageColor}">${message}</div>
+            `;
+
+            dashboard.classList.add('show');
+
+            // Trigger animation
+            setTimeout(() => {
+                const meter = dashboard.querySelector('.danger-circle-meter');
+                if (meter) meter.style.strokeDashoffset = offset;
+            }, 50);
+        }
+
+        // Timeline Builder
+        function buildTimeline(commitsData) {
+            const container = document.getElementById('timeline-container');
+            const wrapper = document.getElementById('timeline-svg-wrapper');
+
+            if (!commitsData || commitsData.length === 0) {
+                container.classList.remove('show');
+                return;
+            }
+
+            container.classList.add('show');
+            wrapper.innerHTML = ''; // clear existing
+
+            // Sort commits ascending by date for chronological layout (left to right)
+            const sortedCommits = [...commitsData].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            const svgNS = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(svgNS, "svg");
+            svg.setAttribute("class", "timeline-svg");
+
+            const numDots = sortedCommits.length;
+
+            svg.setAttribute("viewBox", "0 0 1000 100");
+            svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+
+            const vbWidth = 1000;
+            const vbPad = 50;
+            const lineRange = vbWidth - (vbPad * 2);
+
+            const vbLine = document.createElementNS(svgNS, "line");
+            vbLine.setAttribute("x1", vbPad);
+            vbLine.setAttribute("y1", 50);
+            vbLine.setAttribute("x2", vbWidth - vbPad);
+            vbLine.setAttribute("y2", 50);
+            vbLine.setAttribute("class", "timeline-line");
+            svg.appendChild(vbLine);
+
+            sortedCommits.forEach((commit, index) => {
+                const group = document.createElementNS(svgNS, "g");
+                group.setAttribute("class", "timeline-dot-group");
+                group.style.cursor = "pointer";
+
+                let cx;
+                if (numDots === 1) cx = vbWidth / 2;
+                else cx = vbPad + ((index / (numDots - 1)) * lineRange);
+
+                // Dot
+                const dot = document.createElementNS(svgNS, "circle");
+                dot.setAttribute("cx", cx);
+                dot.setAttribute("cy", 50);
+                dot.setAttribute("r", 8);
+                dot.setAttribute("class", "timeline-dot");
+
+                // Text
+                const text = document.createElementNS(svgNS, "text");
+                text.setAttribute("x", cx);
+                text.setAttribute("y", 25); // Above dot
+                text.setAttribute("class", "timeline-text");
+                text.textContent = commit.sha;
+
+                // Date Text (below)
+                const dateText = document.createElementNS(svgNS, "text");
+                dateText.setAttribute("x", cx);
+                dateText.setAttribute("y", 80); // Below dot
+                dateText.setAttribute("class", "timeline-text");
+                dateText.style.fontSize = "10px";
+                dateText.style.opacity = "0.7";
+                dateText.textContent = commit.shortDate;
+
+                group.appendChild(dot);
+                group.appendChild(text);
+                group.appendChild(dateText);
+
+                // Interactivity
+                group.addEventListener("click", () => {
+                    const card = document.getElementById(commit.domId);
+                    if (card) {
+                        // ensure card is visible if previously filtered out. 
+                        // It generally should only be clicked if the user is timeline browsing...
+                        // But optionally we could force remove 'filtered-out' here. 
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        // Trigger highlight pulse
+                        card.classList.remove('card-highlight');
+                        void card.offsetWidth; // trigger reflow
+                        card.classList.add('card-highlight');
+                    }
+                });
+
+                svg.appendChild(group);
+            });
+
+            wrapper.appendChild(svg);
+        }
+
         async function huntGhosts() {
             const urlInput = document.getElementById('repoUrl').value.trim();
             if (!urlInput) {
@@ -477,14 +1596,27 @@
             const loader = document.getElementById('mainLoader');
             const resultsDiv = document.getElementById('results');
             const statsDiv = document.getElementById('stats');
+            const timelineContainer = document.getElementById('timeline-container');
+            const dangerDashboard = document.getElementById('danger-dashboard');
+            const filterBar = document.getElementById('filter-bar');
 
             hideError();
             btn.disabled = true;
             btnText.style.display = 'none';
             loader.style.display = 'block';
             resultsDiv.innerHTML = '';
-            statsDiv.textContent = 'Summoning spirits...';
-            statsDiv.style.opacity = '1';
+
+            timelineContainer.classList.remove('show');
+            dangerDashboard.classList.remove('show');
+            filterBar.classList.remove('show');
+            statsDiv.classList.remove('reveal');
+            document.getElementById('analyzeAllBtn').style.display = 'none';
+            document.getElementById('progress-container').style.display = 'none';
+
+            // reset filter values
+            document.getElementById('searchFilter').value = '';
+            document.getElementById('riskFilter').value = 'ALL';
+            document.getElementById('sortFilter').value = 'NEWEST';
 
             try {
                 // Fetch commits
@@ -496,6 +1628,7 @@
 
                 let ghostsFound = 0;
                 let delay = 0;
+                let ghostCommitsData = []; // Store data for timeline
 
                 // For each commit, fetch diff
                 for (const commit of commits) {
@@ -523,25 +1656,53 @@
                         ghostsFound++;
                         const deletedCodeStr = deletedLinesArr.join('\n');
                         const commitMsg = commit.commit.message.split('\n')[0];
-                        const commitDate = new Date(commit.commit.author.date).toLocaleString(undefined, {
-                            month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                        const dateObj = new Date(commit.commit.author.date);
+                        const relativeDate = timeAgo(dateObj.toISOString());
+
+                        const shortDate = dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+
+                        const riskBadge = getRiskBadge(commit.commit.message);
+                        const rawRisk = getRawRiskCategory(riskBadge);
+
+                        const safeCode = deletedCodeStr.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                        const uiId = 'analysis-' + sha;
+                        const cardId = 'card-' + sha;
+
+                        // Save to timeline and dashboard data array
+                        ghostCommitsData.push({
+                            sha: sha.substring(0, 7),
+                            fullSha: sha,
+                            date: dateObj.toISOString(),
+                            shortDate: shortDate,
+                            domId: cardId,
+                            fullCode: deletedCodeStr,
+                            message: commitMsg
                         });
 
                         // Create card
                         const card = document.createElement('div');
                         card.className = 'ghost-card';
+                        card.id = cardId;
                         card.style.animationDelay = `${delay}s`;
-                        delay += 0.1;
+                        card.style.maxHeight = '5000px';
 
-                        const safeCode = deletedCodeStr.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                        const uiId = 'analysis-' + sha;
+                        // Set attributes for filtering
+                        card.setAttribute('data-timestamp', dateObj.getTime());
+                        card.setAttribute('data-risk', rawRisk);
+
+                        // Ensure data content ignores linebreaks nicely 
+                        const searchableText = (commitMsg + ' ' + deletedCodeStr).replace(/\n/g, ' ').toLowerCase();
+                        card.setAttribute('data-content', searchableText);
+
+                        delay += 0.1;
 
                         card.innerHTML = `
                             <div class="commit-header">
+                                ${riskBadge}
                                 <div class="commit-title">${commitMsg}</div>
                                 <div class="commit-meta">
-                                    <span>${sha.substring(0, 7)}</span>
-                                    <span>${commitDate}</span>
+                                    <span class="commit-sha">${sha.substring(0, 7)}</span>
+                                    <span class="commit-date">${relativeDate}</span>
                                 </div>
                             </div>
                             <div class="deleted-code">${safeCode}</div>
@@ -556,17 +1717,30 @@
                 }
 
                 statsDiv.textContent = `${ghostsFound} Ghost${ghostsFound !== 1 ? 's' : ''} Found`;
+                statsDiv.classList.add('reveal');
 
-                if (ghostsFound === 0) {
+                if (ghostsFound > 0) {
+                    document.getElementById('analyzeAllBtn').style.display = 'flex';
+                    document.getElementById('analyzeAllText').textContent = 'Analyze All Ghosts 👻';
+
+                    // Trigger visualizers
+                    filterBar.classList.add('show');
+                    renderDangerDashboard(ghostsFound, ghostCommitsData);
+                    buildTimeline(ghostCommitsData);
+
+                    // Call apply filters just to init standard sort (Newest First fallback)
+                    applyFilters();
+                } else {
                     resultsDiv.innerHTML = `
-                        <div style="text-align:center; color: #888; padding: 3rem; background: var(--card-bg); border-radius: var(--border-radius); border: 1px dashed #333;">
-                            <span style="font-size: 3rem; display: block; margin-bottom: 1rem; opacity: 0.5;">✨</span>
-                            No ghosts found in the latest 10 commits. Clean codebase!
+                        <div style="text-align:center; color: #888; padding: 4rem; background: var(--card-bg); border-radius: var(--border-radius); border: 1px dashed rgba(255,255,255,0.1);">
+                            <span style="font-size: 3.5rem; display: block; margin-bottom: 1rem; opacity: 0.5;">✨</span>
+                            <h3 style="color:white; margin-bottom:10px;">Clean Codebase!</h3>
+                            <p>No code deletions found in the latest 10 commits.</p>
                         </div>`;
                 }
 
             } catch (err) {
-                statsDiv.textContent = '';
+                statsDiv.classList.remove('reveal');
                 showError(err.message === 'Failed to fetch' ? 'Network error or rate limit exceeded. Please try again later.' : err.message);
             } finally {
                 btn.disabled = false;
@@ -581,17 +1755,14 @@
             const loader = document.getElementById('loader-' + panelId);
             const btn = document.getElementById('btn-' + panelId);
 
-            // Toggle visibility if already analyzed
             if (panel.innerHTML.trim() !== '') {
                 if (panel.style.display === 'none') {
                     panel.style.display = 'block';
-                    btn.style.backgroundColor = 'var(--danger-bg)';
-                    btn.style.borderColor = 'var(--accent-color)';
+                    btn.classList.add('active');
                     btn.querySelector('span').textContent = '👻 Close Analysis';
                 } else {
                     panel.style.display = 'none';
-                    btn.style.backgroundColor = 'transparent';
-                    btn.style.borderColor = 'var(--danger-border)';
+                    btn.classList.remove('active');
                     btn.querySelector('span').textContent = '🔍 Analyze This Ghost';
                 }
                 return;
@@ -619,50 +1790,52 @@
                 const data = await response.json();
                 const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-                if (!aiText) {
-                    throw new Error("No response generated.");
-                }
+                if (!aiText) throw new Error("No response generated.");
 
-                const formattedHtml = formatAiResponse(aiText);
-                panel.innerHTML = formattedHtml;
+                const formattedContent = formatAiResponse(aiText);
+
+                // Construct internal panel HTML
+                panel.innerHTML = `
+                    <div class="report-header">
+                        <div class="report-title">
+                            <span>👻</span> GITGHOST FORENSIC REPORT
+                        </div>
+                        <button class="copy-btn" onclick="copyReport(this, '${panelId}')">Copy Report</button>
+                    </div>
+                    <div class="report-content">${formattedContent}</div>
+                `;
+
                 panel.style.display = 'block';
-                btn.style.backgroundColor = 'var(--danger-bg)';
-                btn.style.borderColor = 'var(--accent-color)';
+                btn.classList.add('active');
 
             } catch (err) {
                 panel.innerHTML = `<div style="color: #ff6b6b; font-weight: 600;">Error analyzing ghost: ${err.message}. Please check your API key.</div>`;
                 panel.style.display = 'block';
             } finally {
                 loader.style.display = 'none';
-                btn.style.display = 'flex';
+                btn.style.display = 'block';
                 btn.querySelector('span').textContent = '👻 Close Analysis';
             }
         }
 
         function formatAiResponse(text) {
-            // Flexible parsing to enforce headings if the AI diverges slightly
             let html = '';
-
-            // Replace bold headers with actual headers for parsing
             const normalizedText = text.replace(/(?:\*\*|#+)\s*(What It Did|Why It Was Deleted|Risk Assessment):?\s*(?:\*\*|#+)?/gi, '\n---SPLIT---$1\n');
             const parts = normalizedText.split('---SPLIT---').filter(Boolean);
 
             if (parts.length <= 1) {
-                // Fallback if AI didn't use requested sections at all
                 return `<p>${text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</p>`;
             }
 
-            parts.forEach((part, index) => {
-                // The first line of part is our Heading (What It Did...)
+            parts.forEach((part) => {
                 const lines = part.split('\n');
                 let heading = lines[0].trim();
                 let body = lines.slice(1).join('\n').trim();
 
-                // Format basic markdown like bold and links for the body
                 body = body
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                     .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replace(/`(.*?)`/g, '<code style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 4px; font-family: \'Fira Code\', monospace; font-size: 0.9em;">$1</code>')
+                    .replace(/`(.*?)`/g, '<code>$1</code>')
                     .replace(/\n\n/g, '</p><p>')
                     .replace(/\n/g, '<br>');
 
@@ -670,6 +1843,20 @@
             });
 
             return html;
+        }
+
+        function copyReport(btnEl, panelId) {
+            const panel = document.getElementById(panelId);
+            const content = panel.querySelector('.report-content').innerText;
+            navigator.clipboard.writeText(content).then(() => {
+                const originalText = btnEl.innerText;
+                btnEl.innerText = "✓ Copied!";
+                btnEl.style.color = "#00ff88";
+                setTimeout(() => {
+                    btnEl.innerText = originalText;
+                    btnEl.style.color = "white";
+                }, 2000);
+            });
         }
     </script>
 </body>
