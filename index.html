@@ -131,6 +131,7 @@
         }
 
         input[type="url"],
+        input[type="password"],
         .filter-bar input,
         .filter-bar select {
             padding: 1.2rem 1.5rem;
@@ -151,6 +152,7 @@
         }
 
         input[type="url"]:focus,
+        input[type="password"]:focus,
         .filter-bar input:focus,
         .filter-bar select:focus {
             border-color: var(--accent-orange);
@@ -987,11 +989,546 @@
                 padding: 1rem;
             }
         }
+
+        /* Hero Landing Section */
+        .hero-landing {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            flex: 1;
+            min-width: 250px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            border: 1px solid rgba(255, 69, 0, 0.2);
+            box-shadow: 0 0 15px rgba(255, 45, 45, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(255, 45, 45, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            text-shadow: 0 0 20px rgba(255, 69, 0, 0.4);
+            margin-bottom: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.4;
+        }
+
+        .story-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .story-card {
+            flex: 1;
+            min-width: 200px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem 1.5rem;
+            border: 1px solid var(--danger-border);
+            box-shadow: inset 0 0 20px rgba(255, 45, 45, 0.05);
+            position: relative;
+            animation: fadeInUp 0.8s ease-out backwards;
+            height: 100%;
+        }
+
+        .story-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .story-text {
+            font-size: 1.05rem;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .story-arrow {
+            font-size: 2rem;
+            color: var(--accent-cyan);
+            animation: fadeInUp 0.8s ease-out backwards;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .float-anim {
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .story-section {
+                flex-direction: column;
+            }
+
+            .story-arrow {
+                transform: rotate(90deg);
+                margin: 1rem 0;
+            }
+        }
+
+        .solution-banner {
+            background: linear-gradient(90deg, rgba(255, 69, 0, 0.1), rgba(255, 69, 0, 0.2), rgba(255, 69, 0, 0.1));
+            border: 1px solid rgba(255, 69, 0, 0.3);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
+            animation: pulse-orange 4s infinite, fadeInUp 0.8s ease-out backwards;
+        }
+
+        .scroll-down {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-cyan);
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: color 0.3s ease;
+            text-decoration: none;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .scroll-down:hover {
+            color: white;
+            text-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        .scroll-down-arrow {
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px);
+            }
+
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Tabs Component */
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            color: white;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -17px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-orange);
+            border-radius: 3px 3px 0 0;
+            box-shadow: 0 -2px 10px rgba(255, 69, 0, 0.5);
+        }
+
+        .view-panel {
+            display: none;
+            animation: fluidFadeIn 0.5s ease-out forwards;
+        }
+
+        .view-panel.active {
+            display: block;
+        }
+
+        /* Ghost Guard Component */
+        .guard-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .guard-input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .guard-textarea {
+            width: 100%;
+            min-height: 250px;
+            background-color: rgba(16, 21, 34, 0.7);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .guard-textarea:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            background-color: rgba(16, 21, 34, 0.9);
+        }
+
+        .guard-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .guard-select {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem;
+            background-color: rgba(16, 21, 34, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .guard-select option {
+            background-color: var(--bg-color);
+            color: white;
+        }
+
+        .guard-context {
+            flex: 2;
+            min-width: 300px;
+            padding: 1rem;
+            background-color: rgba(16, 21, 34, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+        }
+
+        .guard-btn {
+            width: 100%;
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 212, 255, 0.5);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: inset 0 0 15px rgba(0, 212, 255, 0.1);
+        }
+
+        .guard-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            box-shadow: inset 0 0 20px rgba(0, 212, 255, 0.2), 0 0 15px rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .guard-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .guard-result {
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+            display: none;
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            animation: fadeInUp 0.5s ease-out forwards;
+            background-color: var(--card-bg);
+            backdrop-filter: blur(10px);
+        }
+
+        .guard-result.safe-card {
+            background-color: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.1), inset 0 0 20px rgba(0, 255, 136, 0.05);
+        }
+
+        .guard-result.unsafe-card {
+            background-color: rgba(255, 45, 45, 0.05);
+            border: 1px solid rgba(255, 45, 45, 0.4);
+            animation: pulse-red 2s infinite, fadeInUp 0.5s ease-out backwards;
+            box-shadow: 0 0 30px rgba(255, 45, 45, 0.2);
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 45, 45, 0.4), 0 0 30px rgba(255, 45, 45, 0.2); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 45, 45, 0), 0 0 30px rgba(255, 45, 45, 0.2); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 45, 45, 0), 0 0 30px rgba(255, 45, 45, 0.2); }
+        }
+
+        .guard-verdict-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .safe-card .guard-verdict-title {
+            color: #00ff88;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        .unsafe-card .guard-verdict-title {
+            color: #ff2d2d;
+            text-shadow: 0 0 15px rgba(255, 45, 45, 0.5);
+        }
+
+        .warning-icon {
+            display: inline-block;
+            animation: shake 2s cubic-bezier(.36,.07,.19,.97) infinite both;
+        }
+
+        .guard-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .guard-section-content {
+            color: #d1d1d1;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+        
+        .guard-section-content ul {
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .guard-section-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .guard-loader {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-cyan);
+            animation: spin 0.8s ease-in-out infinite;
+        }
+
+        .live-demo-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            color: #00ff88;
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+            animation: pulse-green-glow 2s infinite;
+        }
+
+        .live-demo-badge:hover {
+            background: rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.4);
+            transform: translateY(-2px);
+            color: #ffffff;
+        }
+
+        @keyframes pulse-green-glow {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+
+        /* PR Analyzer Component */
+        .pr-banner {
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: fadeInDown 0.5s ease-out forwards;
+        }
+
+        .pr-banner-danger {
+            background-color: rgba(255, 45, 45, 0.1);
+            color: #ff2d2d;
+            border: 2px solid #ff2d2d;
+            animation: pulse-red-banner 1.5s infinite, fadeInDown 0.5s ease-out backwards;
+            text-shadow: 0 0 10px rgba(255, 45, 45, 0.6);
+        }
+
+        @keyframes pulse-red-banner {
+            0% { box-shadow: 0 0 10px #ff2d2d, inset 0 0 10px #ff2d2d; }
+            50% { box-shadow: 0 0 30px #ff2d2d, inset 0 0 20px #ff2d2d; }
+            100% { box-shadow: 0 0 10px #ff2d2d, inset 0 0 10px #ff2d2d; }
+        }
+
+        .pr-banner-caution {
+            background-color: rgba(255, 165, 0, 0.1);
+            color: #ffa500;
+            border: 2px solid #ffa500;
+            text-shadow: 0 0 10px rgba(255, 165, 0, 0.6);
+        }
+
+        .pr-banner-safe {
+            background-color: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            border: 2px solid #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+        }
+
+        .pr-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 6px solid transparent;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease-out backwards;
+        }
+
+        .pr-card-critical { border-left-color: #ff2d2d; box-shadow: 0 0 15px rgba(255,45,45,0.1); }
+        .pr-card-high { border-left-color: #ffa500; }
+        .pr-card-medium { border-left-color: #ffdd00; }
+        .pr-card-low { border-left-color: #00ff88; }
+        
+        .pr-badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-left: 1rem;
+            vertical-align: middle;
+            color: #fff;
+        }
+        
+        .pr-badge-critical { background: #ff2d2d; box-shadow: 0 0 10px #ff2d2d; }
+        .pr-badge-high { background: #ffa500; }
+        .pr-badge-medium { background: #ffdd00; color: #000; }
+        .pr-badge-low { background: #00ff88; color: #000; }
+
+        .pr-card-title {
+            font-size: 1.2rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+            word-break: break-all;
+        }
+
+        .pr-summary {
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
     </style>
 </head>
 
 <body>
-
+    <a href="https://gitghost.netlify.app" target="_blank" class="live-demo-badge" rel="noopener noreferrer">
+        🟢 Try it live — gitghost.netlify.app
+    </a>
     <canvas id="bg-canvas"></canvas>
 
     <header>
@@ -1003,9 +1540,16 @@
     </header>
 
     <main>
-        <div class="search-container">
+        <div class="tabs-container">
+            <button class="tab-btn active" data-tab="hunter" onclick="switchTab('hunter')">👻 Ghost Hunter</button>
+            <button class="tab-btn" data-tab="guard" onclick="switchTab('guard')">🛡️ Ghost Guard</button>
+            <button class="tab-btn" data-tab="pr" onclick="switchTab('pr')">⚡ PR Analyzer</button>
+        </div>
+
+        <div id="view-hunter" class="view-panel active">
+            <div class="search-container">
             <input type="url" id="repoUrl" placeholder="Paste any public GitHub repo URL..." autocomplete="off"
-                spellcheck="false" />
+                spellcheck="false" style="flex: 1;" />
             <button id="huntBtn" class="primary-btn" onclick="huntGhosts()">
                 <span id="btnText">Hunt Ghosts 👻</span>
                 <div class="loader" id="mainLoader"></div>
@@ -1017,6 +1561,49 @@
             <button class="quick-btn" onclick="fillRepo('https://github.com/microsoft/vscode')">Try VS Code</button>
             <button class="quick-btn" onclick="fillRepo('https://github.com/torvalds/linux')">Try Linux</button>
         </div>
+
+        <section id="hero-landing" class="hero-landing" style="margin-top: 3rem;">
+            <div class="stats-bar">
+                <div class="stat-card" style="animation-delay: 0.2s">
+                    <div class="stat-number" data-target="73" data-suffix="%">0%</div>
+                    <div class="stat-label">of production bugs traced to deleted code</div>
+                </div>
+                <div class="stat-card" style="animation-delay: 0.4s">
+                    <div class="stat-number" data-target="4.5" data-suffix=" days">0 days</div>
+                    <div class="stat-label">average time to find a deletion-caused bug</div>
+                </div>
+                <div class="stat-card" style="animation-delay: 0.6s">
+                    <div class="stat-number" data-target="2.4" data-prefix="$" data-suffix="M">$0M</div>
+                    <div class="stat-label">average cost of a production incident</div>
+                </div>
+            </div>
+
+            <div class="story-section">
+                <div class="story-card" style="animation-delay: 0.8s">
+                    <span class="story-icon">🧑‍💻</span>
+                    <p class="story-text">Developer deletes code thinking it is redundant</p>
+                </div>
+                <div class="story-arrow" style="animation-delay: 0.9s"><span class="float-anim">➔</span></div>
+                <div class="story-card" style="animation-delay: 1.0s">
+                    <span class="story-icon">⏳</span>
+                    <p class="story-text">Weeks pass. Nobody notices. Knowledge is gone.</p>
+                </div>
+                <div class="story-arrow" style="animation-delay: 1.1s"><span class="float-anim">➔</span></div>
+                <div class="story-card" style="animation-delay: 1.2s">
+                    <span class="story-icon">💥</span>
+                    <p class="story-text">Production crashes. 3 days of debugging begins.</p>
+                </div>
+            </div>
+
+            <div class="solution-banner" style="animation-delay: 1.4s">
+                GitGhost reconstructs what was lost — before it becomes a crisis. <span class="ghost-emoji">👻</span>
+            </div>
+
+            <a href="#repoUrl" class="scroll-down" onclick="scrollToScan(event)" style="animation-delay: 1.6s">
+                <span class="scroll-down-arrow">↑</span>
+                <span>Scan Your Repo</span>
+            </a>
+        </section>
 
         <div id="errorMessage" class="error-message"></div>
 
@@ -1061,6 +1648,51 @@
             <div class="timeline-title">Visual Ghost History</div>
             <div id="timeline-svg-wrapper"></div>
         </div>
+
+        </div> <!-- End view-hunter -->
+
+        <div id="view-guard" class="view-panel">
+            <div class="guard-container">
+                <div class="guard-input-group">
+                    <textarea id="guardCode" class="guard-textarea" placeholder="Paste the code you are thinking of deleting..."></textarea>
+                </div>
+                <div class="guard-controls">
+                    <select id="guardLang" class="guard-select">
+                        <option value="JavaScript">JavaScript</option>
+                        <option value="Python">Python</option>
+                        <option value="Java">Java</option>
+                        <option value="C++">C++</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="text" id="guardContext" class="guard-context" placeholder="Optional: What does the rest of your system do? (2-3 sentences)" autocomplete="off">
+                </div>
+                <button id="guardBtn" class="guard-btn" onclick="checkGhostGuard()">
+                    <span id="guardBtnText">🛡️ Check If Safe To Delete</span>
+                    <div class="guard-loader" id="guardLoader"></div>
+                </button>
+
+                <div id="guardResult" class="guard-result"></div>
+            </div>
+        </div>
+
+        <div id="view-pr" class="view-panel">
+            <div class="guard-container">
+                <div class="search-container">
+                    <input type="url" id="prUrl" placeholder="Paste any public GitHub Pull Request URL... (e.g. https://github.com/facebook/react/pull/1234)" autocomplete="off" spellcheck="false" style="flex: 1;" />
+                    <button id="analyzePrBtn" class="primary-btn" onclick="analyzePR()">
+                        <span id="prBtnText">⚡ Analyze PR Risk</span>
+                        <div class="loader" id="prLoader"></div>
+                    </button>
+                </div>
+                
+                <div id="prSummary" class="pr-summary" style="display: none;"></div>
+                <div id="prResults" class="pr-results"></div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button id="downloadReportBtn" class="guard-btn" style="display: none; max-width: 300px; margin: 0 auto;" onclick="downloadPRReport()">⬇️ Download PR Report</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
@@ -1069,7 +1701,7 @@
     </footer>
 
     <script>
-        const GEMINI_API_KEY = 'AIzaSyBguLfslIfCF3yWDv27fR8R5IROAbnv_XI'; // using existing key
+        const GEMINI_API_KEY = 'AIzaSyCAq4A-A25CF2oywUzUH7_QyTiYJyC4Xi4';
 
         // -----------------------------------------
         // Canvas Particles Background
@@ -1578,6 +2210,7 @@
 
         async function huntGhosts() {
             const urlInput = document.getElementById('repoUrl').value.trim();
+
             if (!urlInput) {
                 showError("Please enter a GitHub repository URL.");
                 return;
@@ -1857,6 +2490,396 @@
                     btnEl.style.color = "white";
                 }, 2000);
             });
+        }
+
+        // --- Hero Section Scripts ---
+        function scrollToScan(e) {
+            e.preventDefault();
+            const target = document.getElementById('repoUrl');
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            target.focus({ preventScroll: true });
+        }
+
+        // Counter Animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = parseFloat(counter.getAttribute('data-target'));
+                const prefix = counter.getAttribute('data-prefix') || '';
+                const suffix = counter.getAttribute('data-suffix') || '';
+                const duration = 2000;
+                const frameDuration = 1000 / 60;
+                const totalFrames = Math.round(duration / frameDuration);
+                let frame = 0;
+
+                const counterInterval = setInterval(() => {
+                    frame++;
+                    const progress = frame / totalFrames;
+                    const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                    const current = target * easeProgress;
+
+                    if (target % 1 === 0) {
+                        counter.textContent = prefix + Math.round(current) + suffix;
+                    } else {
+                        counter.textContent = prefix + current.toFixed(1) + suffix;
+                    }
+
+                    if (frame === totalFrames) {
+                        clearInterval(counterInterval);
+                        counter.textContent = prefix + target + suffix;
+                    }
+                }, frameDuration);
+            });
+        }
+
+        // Run animation since script is at the bottom of the body
+        animateCounters();
+
+        // --- Ghost Guard Scripts ---
+        function switchTab(tab) {
+            // update tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-tab') === tab) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // update views
+            document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById('view-' + tab).classList.add('active');
+        }
+
+        async function checkGhostGuard() {
+            const code = document.getElementById('guardCode').value.trim();
+            const language = document.getElementById('guardLang').value;
+            const context = document.getElementById('guardContext').value.trim();
+
+            if (!code) {
+                alert("Please paste the code you want to check.");
+                return;
+            }
+
+            const btn = document.getElementById('guardBtn');
+            const btnText = document.getElementById('guardBtnText');
+            const loader = document.getElementById('guardLoader');
+            const resultPanel = document.getElementById('guardResult');
+
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            loader.style.display = 'block';
+            resultPanel.style.display = 'none';
+            resultPanel.className = 'guard-result'; // reset classes
+
+            const prompt = `You are GitGhost Guard, a protective AI that prevents dangerous code deletions. A developer wants to delete the following ${language} code. Analyze it and respond in exactly 4 sections:
+1) DELETION VERDICT (show either ✅ SAFE TO DELETE or 🚨 DO NOT DELETE in large text)
+2) WHY IT MIGHT BE LOAD-BEARING (explain any hidden dependencies, edge cases, or critical logic this code handles)
+3) WHAT BREAKS IF DELETED (specific scenarios where deletion causes failures)
+4) SAFE DELETION CHECKLIST (if deletion is safe, list 3 steps to do it safely. If unsafe, list what to do instead).
+
+Code to analyze:
+${code}
+
+System context:
+${context || 'None provided.'}`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (!aiText) throw new Error("No response generated.");
+
+                // Check verdict
+                const isSafe = aiText.includes('✅ SAFE TO DELETE');
+                
+                if (isSafe) {
+                    resultPanel.classList.add('safe-card');
+                } else {
+                    resultPanel.classList.add('unsafe-card');
+                }
+
+                // Format the aiText into styled HTML sections
+                const htmlContent = formatGuardResponse(aiText, isSafe);
+                
+                resultPanel.innerHTML = htmlContent;
+                resultPanel.style.display = 'block';
+
+            } catch (err) {
+                resultPanel.innerHTML = `<div style="color: #ff6b6b; font-weight: 600; text-align: center;">Error: ${err.message}</div>`;
+                resultPanel.style.display = 'block';
+                resultPanel.classList.add('unsafe-card');
+            } finally {
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                loader.style.display = 'none';
+            }
+        }
+
+        function formatGuardResponse(text, isSafe) {
+            let html = '';
+            
+            // Add custom header based on verdict
+            const icon = isSafe ? '✅' : '<span class="warning-icon">🚨</span>';
+            const titleText = isSafe ? 'SAFE TO DELETE' : 'DO NOT DELETE';
+            html += `<div class="guard-verdict-title">${icon} ${titleText}</div>`;
+
+            // Split by numbers or keywords if formatting is consistent
+            const normalizedText = text.replace(/(?:\*\*|#+|\d+\)|\d+\.)\s*(DELETION VERDICT|WHY IT MIGHT BE LOAD-BEARING|WHAT BREAKS IF DELETED|SAFE DELETION CHECKLIST):?\s*(?:\*\*|#+)?/gi, '\n---SPLIT---$1\n');
+            const parts = normalizedText.split('---SPLIT---').filter(Boolean);
+
+            if (parts.length <= 1) {
+                // If it failed to split properly, handle generic display
+                return html + `<div class="guard-section-content">${text.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>')}</div>`;
+            }
+
+            parts.forEach((part) => {
+                const lines = part.split('\n');
+                let headingStr = lines[0].trim().toUpperCase();
+                let body = lines.slice(1).join('\n').trim();
+                
+                if (headingStr.includes('DELETION VERDICT')) {
+                    return; // Skip since we built a custom header from this
+                }
+
+                body = body
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/`(.*?)`/g, '<code>$1</code>')
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/\n/g, '<br>');
+
+                html += `<div class="guard-section-title">${headingStr}</div><div class="guard-section-content"><p>${body}</p></div>`;
+            });
+
+            return html;
+        }
+
+        // --- PR Analyzer Scripts ---
+        let prReportData = ""; // string to store report data for download
+
+        function parsePRUrl(url) {
+            try {
+                const u = new URL(url);
+                if (u.hostname !== 'github.com') return null;
+                const match = u.pathname.match(/^\/([^\/]+)\/([^\/]+)\/pull\/(\d+)/);
+                if (match) return { owner: match[1], repo: match[2], pull: match[3] };
+                return null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        async function analyzePR() {
+            const prUrl = document.getElementById('prUrl').value.trim();
+            if (!prUrl) {
+                alert("Please paste a valid GitHub PR URL.");
+                return;
+            }
+
+            const info = parsePRUrl(prUrl);
+            if (!info) {
+                alert("Invalid GitHub PR URL format. Use https://github.com/owner/repo/pull/123");
+                return;
+            }
+
+            const btn = document.getElementById('analyzePrBtn');
+            const btnText = document.getElementById('prBtnText');
+            const loader = document.getElementById('prLoader');
+            const summaryDiv = document.getElementById('prSummary');
+            const resultsDiv = document.getElementById('prResults');
+            const downloadBtn = document.getElementById('downloadReportBtn');
+
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            loader.style.display = 'block';
+            summaryDiv.style.display = 'none';
+            resultsDiv.innerHTML = '';
+            downloadBtn.style.display = 'none';
+            prReportData = \`GitGhost PR Analyzer Report\nURL: \${prUrl}\n\n\`;
+
+            try {
+                // Fetch PR files
+                const filesRes = await fetch(\`https://api.github.com/repos/\${info.owner}/\${info.repo}/pulls/\${info.pull}/files\`);
+                if (!filesRes.ok) throw new Error("Failed to fetch PR data from GitHub.");
+                const files = await filesRes.json();
+
+                let filesToAnalyze = [];
+                for (const file of files) {
+                    if (file.patch) {
+                        const deletions = file.patch.split('\\n').filter(line => line.startsWith('-') && !line.startsWith('---')).join('\\n');
+                        if (deletions.trim().length > 0) {
+                            filesToAnalyze.push({ filename: file.filename, deletions: deletions });
+                        }
+                    }
+                }
+
+                if (filesToAnalyze.length === 0) {
+                    resultsDiv.innerHTML = \`<div class="pr-banner pr-banner-safe">✅ SAFE TO MERGE</div><div class="pr-summary">0 files with deletions found in this PR.</div>\`;
+                    prReportData += "OVERALL RECOMMENDATION: SAFE TO MERGE. No deletions found.\\n";
+                    return; // Early exit
+                }
+
+                let analysisResults = [];
+                let criticalCount = 0;
+                let highestRisk = 0; // 0=LOW, 1=MED, 2=HIGH, 3=CRIT
+
+                const riskMap = {
+                    'CRITICAL': { level: 3, cls: 'pr-card-critical', badge: 'pr-badge-critical' },
+                    'HIGH': { level: 2, cls: 'pr-card-high', badge: 'pr-badge-high' },
+                    'MEDIUM': { level: 1, cls: 'pr-card-medium', badge: 'pr-badge-medium' },
+                    'LOW': { level: 0, cls: 'pr-card-low', badge: 'pr-badge-low' }
+                };
+
+                // Analyze each file
+                for (let i = 0; i < filesToAnalyze.length; i++) {
+                    summaryDiv.style.display = 'block';
+                    summaryDiv.innerHTML = \`Analyzing file \${i+1} of \${filesToAnalyze.length}...<br><code>\${filesToAnalyze[i].filename}</code>\`;
+                    
+                    const resultChunk = await analyzePRFileWithGemini(filesToAnalyze[i].filename, filesToAnalyze[i].deletions);
+                    
+                    if (resultChunk.risk === 'CRITICAL') criticalCount++;
+                    const lvl = riskMap[resultChunk.risk]?.level || 0;
+                    if (lvl > highestRisk) highestRisk = lvl;
+
+                    analysisResults.push({ file: filesToAnalyze[i].filename, ...resultChunk });
+                }
+
+                // Render overall banner
+                let bannerHtml = '';
+                if (highestRisk === 3) {
+                    bannerHtml = \`<div class="pr-banner pr-banner-danger">🛑 DO NOT MERGE</div>\`;
+                    prReportData += \`OVERALL RECOMMENDATION: DO NOT MERGE\\n\\n\`;
+                } else if (highestRisk === 2) {
+                    bannerHtml = \`<div class="pr-banner pr-banner-caution">⚠️ MERGE WITH CAUTION</div>\`;
+                    prReportData += \`OVERALL RECOMMENDATION: MERGE WITH CAUTION\\n\\n\`;
+                } else {
+                    bannerHtml = \`<div class="pr-banner pr-banner-safe">✅ SAFE TO MERGE</div>\`;
+                    prReportData += \`OVERALL RECOMMENDATION: SAFE TO MERGE\\n\\n\`;
+                }
+
+                // Sub-summary
+                bannerHtml += \`<div class="pr-summary">\${filesToAnalyze.length} files analyzed — \${criticalCount} critical deletions found.</div>\`;
+                resultsDiv.innerHTML = bannerHtml;
+
+                // Render specific cards
+                for (const r of analysisResults) {
+                    const rData = riskMap[r.risk] || riskMap['LOW'];
+                    
+                    const card = document.createElement('div');
+                    card.className = \`pr-card \${rData.cls}\`;
+                    card.innerHTML = \`
+                        <div class="pr-card-title">\${r.file} <span class="pr-badge \${rData.badge}">\${r.risk}</span></div>
+                        <div style="color: #fff; margin-bottom: 0.5rem; line-height: 1.5;"><strong>What was deleted:</strong> \${r.what}</div>
+                        <div style="color: #bbb; font-style: italic; line-height: 1.5;"><strong>Recommendation:</strong> \${r.rec}</div>
+                    \`;
+                    resultsDiv.appendChild(card);
+
+                    prReportData += \`--- FILE: \${r.file} ---\\n\`;
+                    prReportData += \`RISK: \${r.risk}\\n\`;
+                    prReportData += \`WHAT WAS DELETED: \${r.what}\\n\`;
+                    prReportData += \`RECOMMENDATION: \${r.rec}\\n\\n\`;
+                }
+
+                downloadBtn.style.display = 'block';
+
+            } catch (err) {
+                summaryDiv.style.display = 'block';
+                summaryDiv.innerHTML = \`<span style="color:#ff2d2d">Error: \${err.message}</span>\`;
+            } finally {
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                loader.style.display = 'none';
+            }
+        }
+
+        async function analyzePRFileWithGemini(filename, code) {
+            const prompt = \`You are GitGhost PR Analyzer. A developer wants to merge a Pull Request that deletes the following code from the file \${filename}. Analyze the risk and respond in exactly 3 sections:
+1) RISK LEVEL (respond with only one of these: CRITICAL, HIGH, MEDIUM, or LOW)
+2) WHAT WAS DELETED (one sentence plain English explanation of what this code did)
+3) MERGE RECOMMENDATION (one sentence on whether this deletion is safe to merge or not)
+
+Code deleted:
+\${code}\`;
+
+            try {
+                const response = await fetch(\`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=\${GEMINI_API_KEY}\`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+
+                const data = await response.json();
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                
+                // Parse sections
+                let risk = 'LOW';
+                if (/CRITICAL/i.test(aiText)) risk = 'CRITICAL';
+                else if (/HIGH/i.test(aiText)) risk = 'HIGH';
+                else if (/MEDIUM/i.test(aiText)) risk = 'MEDIUM';
+
+                let lines = aiText.split('\\n');
+                let what = "Could not parse.";
+                let rec = "Could not parse.";
+                
+                for (let i = 0; i < lines.length; i++) {
+                    let L = lines[i].toUpperCase();
+                    if (L.includes('WHAT WAS DELETED')) {
+                        let parts = lines[i].split(':');
+                        if (parts.length > 1 && parts[1].trim()) what = parts.slice(1).join(':').trim();
+                        else {
+                            let nextI = i + 1;
+                            while(nextI < lines.length && !lines[nextI].trim()) nextI++;
+                            if (nextI < lines.length) what = lines[nextI].trim();
+                        }
+                    }
+                    if (L.includes('MERGE RECOMMENDATION')) {
+                        let parts = lines[i].split(':');
+                        if (parts.length > 1 && parts[1].trim()) rec = parts.slice(1).join(':').trim();
+                        else {
+                            let nextI = i + 1;
+                            while(nextI < lines.length && !lines[nextI].trim()) nextI++;
+                            if (nextI < lines.length) rec = lines[nextI].trim();
+                        }
+                    }
+                }
+                
+                what = what.replace(/\\*\\*/g, '').replace(/^\\d+\\)\\s*/,'').trim();
+                rec = rec.replace(/\\*\\*/g, '').replace(/^\\d+\\)\\s*/,'').trim();
+
+                return { risk, what, rec, raw: aiText };
+            } catch (e) {
+                return { risk: 'HIGH', what: 'Failed to analyze code due to API error.', rec: 'Review manually.', raw: '' };
+            }
+        }
+
+        function downloadPRReport() {
+            const blob = new Blob([prReportData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const prUrl = document.getElementById('prUrl').value.trim();
+            const info = parsePRUrl(prUrl);
+            const filename = info ? \`PR-risk-report-\${info.repo}-PR\${info.pull}.txt\` : 'PR-risk-report.txt';
+            
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
